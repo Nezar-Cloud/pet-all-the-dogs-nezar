@@ -1,3 +1,5 @@
+// Change kind of dog after play andn win the ganme
+
 namespace SpriteKind {
     export const Dog = SpriteKind.create()
     export const HappyDog = SpriteKind.create()
