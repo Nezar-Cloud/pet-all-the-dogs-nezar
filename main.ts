@@ -41,23 +41,45 @@ function introSequence () {
     // Corgi gives intructions
     story.queueStoryPart(function () {
         story.printDialog("Your mission is to play with all the good pups who live on these plains", 70, 50, 50, 100)
-        story.spriteMoveToTile(invisibleCamera, tiles.getTileLocation(0, 8), 200)
-        story.spriteMoveToTile(invisibleCamera, tiles.getTileLocation(25, 8), 200)
+        createDogs()
     })
     story.queueStoryPart(function () {
         story.spriteMoveToTile(invisibleCamera, tiles.getTileLocation(0, 8), 200)
     })
     story.queueStoryPart(function () {
         story.spriteMoveToTile(invisibleCamera, tiles.getTileLocation(25, 8), 200)
+    })
+    story.queueStoryPart(function () {
         controller.moveSprite(tumbleWeed, 200, 0)
         invisibleCamera.destroy()
         scene.cameraFollowSprite(tumbleWeed)
+        introfinish=true
     })
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (tumbleWeed && tumbleWeed.isHittingTile(CollisionDirection.Bottom)) {
         tumbleWeed.vy = -200
     }
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Dog, function (thePlayer, theDog) {
+    if(!isplaying && introfinish){
+        isplaying = true
+        // Story queue thingy 
+        story.queueStoryPart(function() {
+            controller.moveSprite(thePlayer, 0, 0)
+            thePlayer.follow(theDog, 200)
+            story.spriteMoveToTile(theDog, tiles.getTileLocation(randint(0, 24), 11), 200)
+            theDog.startEffect(effects.hearts, 500)
+        })
+        // after dog is finished playing
+        story.queueStoryPart(function() {
+            controller.moveSprite(thePlayer, 200, 0)
+            thePlayer.follow(null)
+            isplaying = false
+        })
+    }
+    
+
 })
 function createDogs () {
     for (let dog of dogImgs) {
@@ -72,6 +94,10 @@ let invisibleCamera: Sprite = null
 let dogImgs: Image[] = []
 let tumbleWeedImg: Image = null
 let corGuyImg: Image = null
+let isplaying = false 
+let introfinish = false 
+let newDog2 = null
+let isplaying2 = false
 corGuyImg = img`
     .............................fff....
     ..fff......................ff44f....
