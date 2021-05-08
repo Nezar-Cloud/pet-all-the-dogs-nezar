@@ -78,6 +78,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Dog, function (thePlayer, theDog
             controller.moveSprite(thePlayer, 200, 0)
             thePlayer.follow(null)
             isplaying = false
+            theDog.setKind(SpriteKind.HappyDog)
         })
     }
     
@@ -255,3 +256,9 @@ img`
     `
 ]
 introSequence()
+game.onUpdate(function() {
+    let happyDogs = sprites.allOfKind(SpriteKind.HappyDog)
+    if(happyDogs.length == dogImgs.length){
+        game.over(true)
+    }
+})
